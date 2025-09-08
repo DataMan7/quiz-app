@@ -191,6 +191,7 @@ function startQuiz() {
 function showQuestion() {
     // Check if we've completed all questions (20 total)
     if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
+        console.log('All questions completed, showing results');
         showResults();
         return;
     }
@@ -199,9 +200,17 @@ function showQuestion() {
     const currentSetIndex = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
     const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
 
+    console.log(`Showing question ${gameState.currentQuestionIndex + 1}: Set ${currentSetIndex + 1}, Question ${questionInSet + 1} in set`);
+
     // Safety check to ensure we don't go out of bounds
     if (currentSetIndex >= gameState.questions.length || questionInSet >= gameState.questions[currentSetIndex].length) {
-        console.error('Question index out of bounds:', { currentSetIndex, questionInSet, totalSets: gameState.questions.length });
+        console.error('Question index out of bounds:', {
+            currentQuestionIndex: gameState.currentQuestionIndex,
+            currentSetIndex,
+            questionInSet,
+            totalSets: gameState.questions.length,
+            questionsInSet: gameState.questions[currentSetIndex]?.length
+        });
         showResults();
         return;
     }
@@ -275,8 +284,11 @@ function selectAnswer(event) {
 function nextQuestion() {
     gameState.currentQuestionIndex++;
 
+    console.log(`Moving to question ${gameState.currentQuestionIndex} of ${gameState.totalSets * gameState.questionsPerSet}`);
+
     // Check if we've completed all questions (20 total)
     if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
+        console.log('All questions completed, showing results');
         showResults();
         return;
     }
@@ -285,8 +297,11 @@ function nextQuestion() {
     const currentSet = Math.floor((gameState.currentQuestionIndex - 1) / gameState.questionsPerSet);
     const nextSet = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
 
+    console.log(`Current set: ${currentSet}, Next set: ${nextSet}, Total sets: ${gameState.totalSets}`);
+
     if (currentSet < nextSet && nextSet < gameState.totalSets) {
         // We've completed a set and there are more sets to come
+        console.log(`Completed set ${currentSet}, moving to set ${nextSet}`);
         gameState.currentSetIndex = nextSet;
         gameState.currentLevel = nextSet + 1;
         showLevelComplete();
@@ -301,6 +316,7 @@ function nextQuestion() {
         setTimeout(showQuestion, 2000);
     } else {
         // Single player mode: continue immediately
+        console.log('Continuing to next question in same set');
         setTimeout(showQuestion, 1500);
     }
 }
@@ -311,18 +327,28 @@ function showLevelComplete() {
 
     // Update waiting screen to show level completion
     const waitingScreen = document.getElementById('waiting-screen');
-    const previousLevel = gameState.currentLevel - 1;
+    const completedSet = gameState.currentSetIndex;
+    const nextSet = gameState.currentSetIndex + 1;
+
     waitingScreen.innerHTML = `
-        <h2>🎉 Set ${previousLevel} Complete!</h2>
+        <h2>🎉 Set ${completedSet} Complete!</h2>
         <p>Great job! You finished 5 questions.</p>
         <p>Current Score: ${gameState.players[0].score} points</p>
-        <p>Get ready for Set ${gameState.currentLevel}...</p>
+        <p>Loading Set ${nextSet}...</p>
     `;
+
+    console.log(`Completed Set ${completedSet}, moving to Set ${nextSet}`);
+    console.log(`Current question index: ${gameState.currentQuestionIndex}`);
 
     setTimeout(() => {
         waitingScreen.innerHTML = '<p>Loading next set...</p>';
-        showQuestion();
-    }, 3000);
+        // Double-check that we haven't exceeded total questions
+        if (gameState.currentQuestionIndex < gameState.totalSets * gameState.questionsPerSet) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }, 2000); // Reduced from 3 seconds to 2 seconds for faster gameplay
 }
 
 function showResults() {
