@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jua - Fun Quiz Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <div id="logo">
+                <img src="logo.svg" alt="Jua Logo" id="logo-image">
+                <h1>Jua</h1>
+            </div>
+        </div>
+        <div id="start-screen">
+            <h1>Welcome to Jua!</h1>
+            <p>A fun quiz game for everyone</p>
+            <button id="single-player-btn">Single Player</button>
+            <button id="host-btn">Host a Game</button>
+            <button id="join-btn">Join a Game</button>
+        </div>
+
+        <div id="host-screen" class="hidden">
+            <h2>Host Game</h2>
+            <p>Game PIN: <span id="game-pin"></span></p>
+            <div id="player-list">
+                <h3>Joined Players:</h3>
+                <ul id="players-ul"></ul>
+            </div>
+            <button id="start-quiz-btn">Start Quiz</button>
+            <div id="question-display"></div>
+            <div id="leaderboard"></div>
+        </div>
+
+        <div id="player-screen" class="hidden">
+            <h2>Join Game</h2>
+            <input type="text" id="pin-input" placeholder="Enter Game PIN">
+            <button id="join-game-btn">Join</button>
+            <div id="player-name-input" class="hidden">
+                <input type="text" id="player-name" placeholder="Enter your name">
+                <button id="submit-name-btn">Start Playing</button>
+            </div>
+            <div id="question-area" class="hidden">
+                <div id="timer">5</div>
+                <h3 id="question-text"></h3>
+                <div id="answers">
+                    <button class="answer-btn" data-option="A"></button>
+                    <button class="answer-btn" data-option="B"></button>
+                    <button class="answer-btn" data-option="C"></button>
+                    <button class="answer-btn" data-option="D"></button>
+                </div>
+            </div>
+            <div id="waiting-screen" class="hidden">
+                <p>Waiting for next question...</p>
+            </div>
+            <div id="results-screen" class="hidden">
+                <h3>Your Score: <span id="player-score"></span></h3>
+                <div id="final-leaderboard"></div>
+                <button id="play-again-btn">Play Again</button>
+                <button id="back-to-menu-btn">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
