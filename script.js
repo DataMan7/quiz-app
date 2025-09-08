@@ -189,16 +189,18 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    if (gameState.currentSetIndex >= gameState.totalSets) {
+    // Check if we've completed all sets (all 20 questions)
+    if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
         showResults();
         return;
     }
 
     const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
-    const question = gameState.questions[gameState.currentSetIndex][questionInSet];
+    const currentSetIndex = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+    const question = gameState.questions[currentSetIndex][questionInSet];
 
     // Update level display
-    document.getElementById('question-text').textContent = `Level ${gameState.currentLevel} - ${question.question}`;
+    document.getElementById('question-text').textContent = `Set ${currentSetIndex + 1} - ${question.question}`;
     const answerBtns = document.querySelectorAll('.answer-btn');
     const shuffledOptions = shuffleArray([...question.options]);
 
@@ -265,15 +267,20 @@ function nextQuestion() {
     gameState.currentQuestionIndex++;
 
     // Check if we've completed a set (every 5 questions)
-    if (gameState.currentQuestionIndex % gameState.questionsPerSet === 0) {
+    const questionsInCurrentSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
+
+    if (questionsInCurrentSet === 0 && gameState.currentSetIndex < gameState.totalSets - 1) {
+        // We've completed a set but not the final set
         gameState.currentSetIndex++;
         gameState.currentLevel++;
+        showLevelComplete();
+        return;
+    }
 
-        // Show level completion message
-        if (gameState.currentSetIndex < gameState.totalSets) {
-            showLevelComplete();
-            return;
-        }
+    // Check if we've completed all sets (all 20 questions)
+    if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
+        showResults();
+        return;
     }
 
     if (gameState.isHost && gameState.players.length > 1) {
@@ -294,14 +301,16 @@ function showLevelComplete() {
 
     // Update waiting screen to show level completion
     const waitingScreen = document.getElementById('waiting-screen');
+    const previousLevel = gameState.currentLevel - 1;
     waitingScreen.innerHTML = `
-        <h2>Level ${gameState.currentLevel - 1} Complete!</h2>
-        <p>Great job! Get ready for Level ${gameState.currentLevel}...</p>
+        <h2>🎉 Set ${previousLevel} Complete!</h2>
+        <p>Great job! You finished 5 questions.</p>
         <p>Current Score: ${gameState.players[0].score} points</p>
+        <p>Get ready for Set ${gameState.currentLevel}...</p>
     `;
 
     setTimeout(() => {
-        waitingScreen.innerHTML = '<p>Waiting for next question...</p>';
+        waitingScreen.innerHTML = '<p>Loading next set...</p>';
         showQuestion();
     }, 3000);
 }
@@ -324,7 +333,7 @@ function showResults() {
 
     // Add level completion message
     const levelMessage = document.createElement('p');
-    levelMessage.textContent = `Congratulations! You completed all ${gameState.totalSets} levels!`;
+    levelMessage.textContent = `Congratulations! You completed all ${gameState.totalSets} levels with ${gameState.totalSets * gameState.questionsPerSet} questions!`;
     levelMessage.style.fontSize = '1.2em';
     levelMessage.style.color = '#007bff';
     levelMessage.style.margin = '10px 0';
@@ -333,6 +342,38 @@ function showResults() {
     scoreElement.parentNode.insertBefore(levelMessage, scoreElement.nextSibling);
 
     updateLeaderboard();
+
+    // Auto-restart with new questions after 5 seconds
+    setTimeout(() => {
+        autoRestartGame();
+    }, 5000);
+}
+
+function autoRestartGame() {
+    // Reset game state
+    gameState.currentQuestionIndex = 0;
+    gameState.currentSetIndex = 0;
+    gameState.currentLevel = 1;
+    gameState.currentPlayerIndex = 0;
+    gameState.players.forEach(player => {
+        player.score = 0;
+        player.answers = [];
+    });
+
+    // Generate new random questions
+    initializeQuestions();
+
+    // Hide results and start new game
+    document.getElementById('results-screen').classList.add('hidden');
+
+    if (gameState.isHost && gameState.players.length > 1) {
+        // Multi-player: go back to host screen
+        document.getElementById('host-screen').classList.remove('hidden');
+    } else {
+        // Single player: start directly with new questions
+        document.getElementById('question-area').classList.remove('hidden');
+        showQuestion();
+    }
 }
 
 function updateLeaderboard() {
