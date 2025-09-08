@@ -31,24 +31,55 @@ function shuffleArray(array) {
 
 // Initialize questions (20 questions in 4 sets of 5)
 function initializeQuestions() {
-    const questionSets = [];
+    console.log('Initializing questions...');
 
-    // Generate 4 sets programmatically with random topics
-    const topics = ["Science", "History", "Geography", "Sports", "Entertainment", "Fun Facts", "Riddles"];
-    for (let set = 0; set < gameState.totalSets; set++) {
-        const setQuestions = [];
-        for (let q = 0; q < gameState.questionsPerSet; q++) {
-            const topic = topics[Math.floor(Math.random() * topics.length)];
-            setQuestions.push(generateRandomQuestion(topic));
-        }
-        questionSets.push(setQuestions);
-    }
+    // Use predefined questions for reliability
+    const allQuestions = [
+        // Set 1 - Science
+        [
+            { question: "What is the chemical symbol for water?", options: ["H2O", "CO2", "O2", "NaCl"], correct: 0 },
+            { question: "How many bones are in the human body?", options: ["206", "208", "210", "212"], correct: 0 },
+            { question: "What planet is known as the 'Red Planet'?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
+            { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi"], correct: 1 },
+            { question: "Which gas do plants absorb from the air?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 }
+        ],
+        // Set 2 - History
+        [
+            { question: "In which year did World War II end?", options: ["1944", "1945", "1946", "1947"], correct: 1 },
+            { question: "Who was the first President of the United States?", options: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], correct: 2 },
+            { question: "Which ancient wonder was located in Alexandria?", options: ["Hanging Gardens", "Lighthouse", "Colossus", "Pyramids"], correct: 1 },
+            { question: "Who painted the Sistine Chapel ceiling?", options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"], correct: 1 },
+            { question: "In which year did the Titanic sink?", options: ["1910", "1912", "1914", "1916"], correct: 1 }
+        ],
+        // Set 3 - Geography
+        [
+            { question: "What is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], correct: 1 },
+            { question: "Which country has the most natural lakes?", options: ["Canada", "Russia", "Finland", "Sweden"], correct: 0 },
+            { question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], correct: 2 },
+            { question: "Which is the smallest continent?", options: ["Europe", "Australia", "Africa", "Asia"], correct: 1 },
+            { question: "What is the highest mountain in the world?", options: ["K2", "Kangchenjunga", "Everest", "Lhotse"], correct: 2 }
+        ],
+        // Set 4 - Sports & Entertainment
+        [
+            { question: "How many players are on a basketball team?", options: ["5", "6", "7", "8"], correct: 0 },
+            { question: "Who directed the movie 'Inception'?", options: ["Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino"], correct: 1 },
+            { question: "In which sport is the term 'home run' used?", options: ["Baseball", "Cricket", "Soccer", "Tennis"], correct: 0 },
+            { question: "What is the highest-grossing film of all time?", options: ["Titanic", "Avatar", "Avengers: Endgame", "Star Wars"], correct: 1 },
+            { question: "How many rings are on the Olympic symbol?", options: ["4", "5", "6", "7"], correct: 1 }
+        ]
+    ];
 
     // Shuffle questions within each set and randomize set order
-    gameState.questions = shuffleArray(questionSets).map(set => shuffleArray(set));
+    gameState.questions = shuffleArray(allQuestions).map(set => shuffleArray(set));
+
+    console.log('Questions initialized successfully!');
+    console.log(`Total sets: ${gameState.questions.length}`);
+    console.log(`Questions per set: ${gameState.questions[0]?.length || 0}`);
+    console.log('Sample question from set 1:', gameState.questions[0]?.[0]);
 }
 
 function generateRandomQuestion(topic) {
+    console.log(`Generating question for topic: ${topic}`);
     const templates = {
         "Science": [
             { q: "What is the chemical symbol for water?", a: ["H2O", "CO2", "O2", "NaCl"], c: 0 },
@@ -102,12 +133,22 @@ function generateRandomQuestion(topic) {
     };
 
     const topicTemplates = templates[topic] || templates["Fun Facts"];
-    const randomTemplate = topicTemplates[Math.floor(Math.random() * topicTemplates.length)];
-    return {
+    const randomIndex = Math.floor(Math.random() * topicTemplates.length);
+    const randomTemplate = topicTemplates[randomIndex];
+
+    console.log(`Selected template ${randomIndex} from ${topic}: ${randomTemplate.q}`);
+
+    const question = {
         question: randomTemplate.q,
         options: [...randomTemplate.a],
         correct: randomTemplate.c
     };
+
+    console.log(`Generated question: ${question.question}`);
+    console.log(`Options: ${question.options.join(', ')}`);
+    console.log(`Correct answer index: ${question.correct}`);
+
+    return question;
 }
 
 // Event listeners
