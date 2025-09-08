@@ -189,14 +189,23 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    // Check if we've completed all sets (all 20 questions)
+    // Check if we've completed all questions (20 total)
     if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
         showResults();
         return;
     }
 
-    const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
+    // Calculate which set and question to show
     const currentSetIndex = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+    const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
+
+    // Safety check to ensure we don't go out of bounds
+    if (currentSetIndex >= gameState.questions.length || questionInSet >= gameState.questions[currentSetIndex].length) {
+        console.error('Question index out of bounds:', { currentSetIndex, questionInSet, totalSets: gameState.questions.length });
+        showResults();
+        return;
+    }
+
     const question = gameState.questions[currentSetIndex][questionInSet];
 
     // Update level display
@@ -266,20 +275,21 @@ function selectAnswer(event) {
 function nextQuestion() {
     gameState.currentQuestionIndex++;
 
-    // Check if we've completed a set (every 5 questions)
-    const questionsInCurrentSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
-
-    if (questionsInCurrentSet === 0 && gameState.currentSetIndex < gameState.totalSets - 1) {
-        // We've completed a set but not the final set
-        gameState.currentSetIndex++;
-        gameState.currentLevel++;
-        showLevelComplete();
+    // Check if we've completed all questions (20 total)
+    if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
+        showResults();
         return;
     }
 
-    // Check if we've completed all sets (all 20 questions)
-    if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
-        showResults();
+    // Check if we've completed a set (every 5 questions)
+    const currentSet = Math.floor((gameState.currentQuestionIndex - 1) / gameState.questionsPerSet);
+    const nextSet = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+
+    if (currentSet < nextSet && nextSet < gameState.totalSets) {
+        // We've completed a set and there are more sets to come
+        gameState.currentSetIndex = nextSet;
+        gameState.currentLevel = nextSet + 1;
+        showLevelComplete();
         return;
     }
 
