@@ -175,6 +175,10 @@ function submitName() {
     }
 }
 
+function showQuestionArea() {
+    document.getElementById('question-area').classList.remove('hidden');
+}
+
 function updatePlayerList() {
     const playerList = document.getElementById('players-ul');
     playerList.innerHTML = '';

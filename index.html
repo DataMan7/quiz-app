@@ -45,25 +45,28 @@
                 <input type="text" id="player-name" placeholder="Enter your name">
                 <button id="submit-name-btn">Start Playing</button>
             </div>
-            <div id="question-area" class="hidden">
-                <div id="timer">5</div>
-                <h3 id="question-text"></h3>
-                <div id="answers">
-                    <button class="answer-btn" data-option="A"></button>
-                    <button class="answer-btn" data-option="B"></button>
-                    <button class="answer-btn" data-option="C"></button>
-                    <button class="answer-btn" data-option="D"></button>
-                </div>
+        </div>
+
+        <div id="question-area" class="hidden">
+            <div id="timer">5</div>
+            <h3 id="question-text"></h3>
+            <div id="answers">
+                <button class="answer-btn" data-option="A"></button>
+                <button class="answer-btn" data-option="B"></button>
+                <button class="answer-btn" data-option="C"></button>
+                <button class="answer-btn" data-option="D"></button>
             </div>
-            <div id="waiting-screen" class="hidden">
-                <p>Waiting for next question...</p>
-            </div>
-            <div id="results-screen" class="hidden">
-                <h3>Your Score: <span id="player-score"></span></h3>
-                <div id="final-leaderboard"></div>
-                <button id="play-again-btn">Play Again</button>
-                <button id="back-to-menu-btn">Back to Menu</button>
-            </div>
+        </div>
+
+        <div id="waiting-screen" class="hidden">
+            <p>Waiting for next question...</p>
+        </div>
+
+        <div id="results-screen" class="hidden">
+            <h3>Your Score: <span id="player-score"></span></h3>
+            <div id="final-leaderboard"></div>
+            <button id="play-again-btn">Play Again</button>
+            <button id="back-to-menu-btn">Back to Menu</button>
         </div>
     </div>
     <script src="script.js"></script>
