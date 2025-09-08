@@ -6,9 +6,13 @@ let gameState = {
     players: [],
     currentPlayerIndex: 0,
     currentQuestionIndex: 0,
+    currentSetIndex: 0,
     questions: [],
     timer: null,
-    timeLeft: 5
+    timeLeft: 5,
+    totalSets: 4, // 4 levels/sets
+    questionsPerSet: 5, // 5 questions per set
+    currentLevel: 1
 };
 
 // Generate random game PIN
@@ -25,26 +29,15 @@ function shuffleArray(array) {
     return array;
 }
 
-// Initialize questions (90 questions in sets of 5)
+// Initialize questions (20 questions in 4 sets of 5)
 function initializeQuestions() {
-    const questionSets = [
-        // Set 1: General Knowledge
-        [
-            { question: "What is the capital of France?", options: ["London", "Berlin", "Paris", "Madrid"], correct: 2 },
-            { question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
-            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], correct: 1 },
-            { question: "Who painted the Mona Lisa?", options: ["Van Gogh", "Da Vinci", "Picasso", "Rembrandt"], correct: 1 },
-            { question: "What is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], correct: 3 }
-        ],
-        // Add more sets here... (I'll add 17 more sets to make 90 questions)
-        // For brevity, I'll create a function to generate more varied questions
-    ];
+    const questionSets = [];
 
-    // Generate additional sets programmatically
+    // Generate 4 sets programmatically with random topics
     const topics = ["Science", "History", "Geography", "Sports", "Entertainment", "Fun Facts", "Riddles"];
-    for (let set = 1; set < 18; set++) {
+    for (let set = 0; set < gameState.totalSets; set++) {
         const setQuestions = [];
-        for (let q = 0; q < 5; q++) {
+        for (let q = 0; q < gameState.questionsPerSet; q++) {
             const topic = topics[Math.floor(Math.random() * topics.length)];
             setQuestions.push(generateRandomQuestion(topic));
         }
@@ -196,16 +189,16 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    if (gameState.currentQuestionIndex >= gameState.questions.flat().length) {
+    if (gameState.currentSetIndex >= gameState.totalSets) {
         showResults();
         return;
     }
 
-    const currentSet = Math.floor(gameState.currentQuestionIndex / 5);
-    const questionInSet = gameState.currentQuestionIndex % 5;
-    const question = gameState.questions[currentSet][questionInSet];
+    const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
+    const question = gameState.questions[gameState.currentSetIndex][questionInSet];
 
-    document.getElementById('question-text').textContent = question.question;
+    // Update level display
+    document.getElementById('question-text').textContent = `Level ${gameState.currentLevel} - ${question.question}`;
     const answerBtns = document.querySelectorAll('.answer-btn');
     const shuffledOptions = shuffleArray([...question.options]);
 
@@ -271,6 +264,18 @@ function selectAnswer(event) {
 function nextQuestion() {
     gameState.currentQuestionIndex++;
 
+    // Check if we've completed a set (every 5 questions)
+    if (gameState.currentQuestionIndex % gameState.questionsPerSet === 0) {
+        gameState.currentSetIndex++;
+        gameState.currentLevel++;
+
+        // Show level completion message
+        if (gameState.currentSetIndex < gameState.totalSets) {
+            showLevelComplete();
+            return;
+        }
+    }
+
     if (gameState.isHost && gameState.players.length > 1) {
         // Multi-player mode: switch players and show waiting screen
         gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
@@ -281,6 +286,24 @@ function nextQuestion() {
         // Single player mode: continue immediately
         setTimeout(showQuestion, 1500);
     }
+}
+
+function showLevelComplete() {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('waiting-screen').classList.remove('hidden');
+
+    // Update waiting screen to show level completion
+    const waitingScreen = document.getElementById('waiting-screen');
+    waitingScreen.innerHTML = `
+        <h2>Level ${gameState.currentLevel - 1} Complete!</h2>
+        <p>Great job! Get ready for Level ${gameState.currentLevel}...</p>
+        <p>Current Score: ${gameState.players[0].score} points</p>
+    `;
+
+    setTimeout(() => {
+        waitingScreen.innerHTML = '<p>Waiting for next question...</p>';
+        showQuestion();
+    }, 3000);
 }
 
 function showResults() {
@@ -294,7 +317,21 @@ function showResults() {
         document.getElementById('results-screen').classList.remove('hidden');
     }
 
-    document.getElementById('player-score').textContent = gameState.players[0].score;
+    // Update results with level completion info
+    const resultsDiv = document.getElementById('results-screen');
+    const scoreElement = document.getElementById('player-score');
+    scoreElement.textContent = gameState.players[0].score;
+
+    // Add level completion message
+    const levelMessage = document.createElement('p');
+    levelMessage.textContent = `Congratulations! You completed all ${gameState.totalSets} levels!`;
+    levelMessage.style.fontSize = '1.2em';
+    levelMessage.style.color = '#007bff';
+    levelMessage.style.margin = '10px 0';
+
+    // Insert after the score
+    scoreElement.parentNode.insertBefore(levelMessage, scoreElement.nextSibling);
+
     updateLeaderboard();
 }
 
@@ -310,13 +347,15 @@ function updateLeaderboard() {
 function playAgain() {
     // Reset game state
     gameState.currentQuestionIndex = 0;
+    gameState.currentSetIndex = 0;
+    gameState.currentLevel = 1;
     gameState.currentPlayerIndex = 0;
     gameState.players.forEach(player => {
         player.score = 0;
         player.answers = [];
     });
 
-    // Re-initialize questions for variety
+    // Re-initialize questions for variety (new random questions)
     initializeQuestions();
 
     // Hide results and start appropriate mode
@@ -350,9 +389,13 @@ function backToMenu() {
         players: [],
         currentPlayerIndex: 0,
         currentQuestionIndex: 0,
+        currentSetIndex: 0,
         questions: [],
         timer: null,
-        timeLeft: 5
+        timeLeft: 5,
+        totalSets: 4,
+        questionsPerSet: 5,
+        currentLevel: 1
     };
 
     // Re-initialize questions
