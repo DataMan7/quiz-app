@@ -14,11 +14,15 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  console.log('API called: Env vars - URL present:', !!process.env.SUPABASE_URL, 'Key present:', !!process.env.SUPABASE_ANON_KEY);
+
   try {
     const { data: questions, error } = await supabase
       .from('questions')
       .select('*')
       .order('set_id', { ascending: true });
+
+    console.log('Supabase query result: Questions count:', questions ? questions.length : 0, 'Error:', error ? error.message : null);
 
     if (error) {
       throw error;
@@ -51,9 +55,10 @@ export default async function handler(req, res) {
     const shuffledSets = shuffleArray([...questionSets]);
     shuffledSets.forEach(set => shuffleArray(set));
 
+    console.log('Processed sets count:', shuffledSets.length, 'Sample set size:', shuffledSets[0]?.length);
     res.status(200).json(shuffledSets);
   } catch (error) {
     console.error('Error fetching questions:', error);
-    res.status(500).json({ error: 'Failed to fetch questions' });
+    res.status(500).json({ error: 'Failed to fetch questions', details: error.message });
   }
 }

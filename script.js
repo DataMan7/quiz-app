@@ -40,11 +40,12 @@ async function initializeQuestions() {
         }
         const questionSets = await response.json();
 
-        // Shuffle sets and questions within each set
-        gameState.questions = shuffleArray([...questionSets]).map(set => shuffleArray([...set]));
+        // Select 4 random sets and shuffle questions within each
+        const selectedSets = shuffleArray([...questionSets]).slice(0, gameState.totalSets);
+        gameState.questions = selectedSets.map(set => shuffleArray([...set]));
 
         console.log('Questions initialized successfully from API!');
-        console.log(`Total sets: ${gameState.questions.length}`);
+        console.log(`Total sets loaded: ${questionSets.length}, Selected random sets: ${gameState.questions.length}`);
         console.log(`Questions per set: ${gameState.questions[0]?.length || 0}`);
         console.log('Sample question from set 1:', gameState.questions[0]?.[0]);
     } catch (error) {
@@ -52,7 +53,7 @@ async function initializeQuestions() {
         // Fallback to hardcoded if API fails (optional, but for robustness)
         alert('Failed to load questions from database. Using fallback data.');
         // Hardcoded fallback: 4 sets of 5 questions each
-        gameState.questions = [
+        let fallbackQuestions = [
             // Set 1: Science
             [
                 { question: "What is the chemical symbol for water?", options: ["H2O", "CO2", "O2", "NaCl"], correct: 0 },
@@ -86,7 +87,8 @@ async function initializeQuestions() {
                 { question: "How many rings are on the Olympic symbol?", options: ["4", "5", "6", "7"], correct: 1 }
             ]
         ];
-        gameState.questions = shuffleArray([...gameState.questions]).map(set => shuffleArray([...set]));
+        // Shuffle fallback sets for variety
+        gameState.questions = shuffleArray([...fallbackQuestions]).map(set => shuffleArray([...set]));
         console.log('Fallback questions loaded successfully!');
         console.log(`Total fallback sets: ${gameState.questions.length}`);
     }
@@ -187,7 +189,7 @@ function showQuestion() {
     const currentSetIndex = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
     const questionInSet = gameState.currentQuestionIndex % gameState.questionsPerSet;
 
-    console.log(`Showing question ${gameState.currentQuestionIndex + 1}: Set ${currentSetIndex + 1}, Question ${questionInSet + 1} in set`);
+    console.log(`Showing question ${gameState.currentQuestionIndex + 1}: Set ${currentSetIndex + 1}, Question ${questionInSet + 1} in set. Total sets available: ${gameState.questions.length}`);
 
     // Safety check to ensure we don't go out of bounds
     if (currentSetIndex >= gameState.questions.length || questionInSet >= gameState.questions[currentSetIndex].length) {
@@ -336,20 +338,35 @@ function showLevelComplete() {
 
     // Update waiting screen to show level completion
     const waitingScreen = document.getElementById('waiting-screen');
-    const completedSet = gameState.currentSetIndex;
-    const nextSet = gameState.currentSetIndex + 1;
+    const completedSet = Math.floor((gameState.currentQuestionIndex - 1) / gameState.questionsPerSet) + 1;
+    const nextSet = completedSet + 1;
 
     waitingScreen.innerHTML = `
-        <h2>🎉 Set ${completedSet} Complete!</h2>
-        <p>Great job! You finished 5 questions.</p>
+        <h2>🎉 Set ${completedSet} Conquered!</h2>
+        <p>Excellent work! You've mastered 5 challenging questions.</p>
         <p>Current Score: ${gameState.players[gameState.currentPlayerIndex].score} points</p>
-        <p>Loading Set ${nextSet}...</p>
+        <p>🚀 Gear up for Set ${nextSet} – Loading in 5 seconds...</p>
+        <div id="countdown-timer" style="font-size: 24px; color: #007bff;">5</div>
     `;
 
     console.log(`Completed Set ${completedSet}, moving to Set ${nextSet}`);
     console.log(`Current question index: ${gameState.currentQuestionIndex}`);
 
+    // Countdown animation
+    let count = 5;
+    const countdownEl = document.getElementById('countdown-timer');
+    const countdownInterval = setInterval(() => {
+        count--;
+        if (countdownEl) {
+            countdownEl.textContent = count;
+        }
+        if (count < 0) {
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+
     setTimeout(() => {
+        clearInterval(countdownInterval);
         waitingScreen.innerHTML = '<p>Loading next set...</p>';
         // Double-check that we haven't exceeded total questions
         if (gameState.currentQuestionIndex < gameState.totalSets * gameState.questionsPerSet) {
@@ -357,7 +374,7 @@ function showLevelComplete() {
         } else {
             showResults();
         }
-    }, 2000); // Reduced from 3 seconds to 2 seconds for faster gameplay
+    }, 5000); // 5 seconds delay for creative loading
 }
 
 function showResults() {
@@ -384,7 +401,10 @@ function showResults() {
     }, 5000);
 }
 
+console.log('Results shown; auto-restart in 5s');
+
 function autoRestartGame() {
+    console.log('Auto-restarting game: Resetting state and re-fetching questions');
     // Reset game state
     gameState.currentQuestionIndex = 0;
     gameState.currentSetIndex = 0;
@@ -432,6 +452,7 @@ function playAgain() {
     });
 
     // Re-initialize questions for variety (new random questions)
+    console.log('Play again: Re-initializing questions');
     initializeQuestions();
 
     // Hide results and start appropriate mode
