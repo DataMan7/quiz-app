@@ -178,6 +178,18 @@ function startQuiz() {
 }
 
 function showQuestion() {
+    console.log('showQuestion called with index:', gameState.currentQuestionIndex);
+
+    // Hide waiting screen if visible
+    const ws = document.getElementById('waiting-screen');
+    if (ws) {
+        ws.classList.add('hidden');
+        console.log('Waiting screen hidden');
+    }
+
+    // Show question area
+    document.getElementById('question-area').classList.remove('hidden');
+
     // Check if we've completed all questions (20 total)
     if (gameState.currentQuestionIndex >= gameState.totalSets * gameState.questionsPerSet) {
         console.log('All questions completed, showing results');
@@ -366,12 +378,15 @@ function showLevelComplete() {
     }, 1000);
 
     setTimeout(() => {
+        console.log('Level complete timeout triggered; index:', gameState.currentQuestionIndex, 'Max index:', gameState.totalSets * gameState.questionsPerSet);
         clearInterval(countdownInterval);
         waitingScreen.innerHTML = '<p>Loading next set...</p>';
         // Double-check that we haven't exceeded total questions
         if (gameState.currentQuestionIndex < gameState.totalSets * gameState.questionsPerSet) {
+            console.log('Calling showQuestion from level complete');
             showQuestion();
         } else {
+            console.log('Reached max questions, showing results from level complete');
             showResults();
         }
     }, 5000); // 5 seconds delay for creative loading
