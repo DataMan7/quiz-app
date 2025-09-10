@@ -30,126 +30,68 @@ function shuffleArray(array) {
 }
 
 // Initialize questions (20 questions in 4 sets of 5)
-function initializeQuestions() {
-    console.log('Initializing questions...');
+async function initializeQuestions() {
+    console.log('Initializing questions from API...');
 
-    // Use predefined questions for reliability
-    const allQuestions = [
-        // Set 1 - Science
-        [
-            { question: "What is the chemical symbol for water?", options: ["H2O", "CO2", "O2", "NaCl"], correct: 0 },
-            { question: "How many bones are in the human body?", options: ["206", "208", "210", "212"], correct: 0 },
-            { question: "What planet is known as the 'Red Planet'?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
-            { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi"], correct: 1 },
-            { question: "Which gas do plants absorb from the air?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 }
-        ],
-        // Set 2 - History
-        [
-            { question: "In which year did World War II end?", options: ["1944", "1945", "1946", "1947"], correct: 1 },
-            { question: "Who was the first President of the United States?", options: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], correct: 2 },
-            { question: "Which ancient wonder was located in Alexandria?", options: ["Hanging Gardens", "Lighthouse", "Colossus", "Pyramids"], correct: 1 },
-            { question: "Who painted the Sistine Chapel ceiling?", options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"], correct: 1 },
-            { question: "In which year did the Titanic sink?", options: ["1910", "1912", "1914", "1916"], correct: 1 }
-        ],
-        // Set 3 - Geography
-        [
-            { question: "What is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], correct: 1 },
-            { question: "Which country has the most natural lakes?", options: ["Canada", "Russia", "Finland", "Sweden"], correct: 0 },
-            { question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], correct: 2 },
-            { question: "Which is the smallest continent?", options: ["Europe", "Australia", "Africa", "Asia"], correct: 1 },
-            { question: "What is the highest mountain in the world?", options: ["K2", "Kangchenjunga", "Everest", "Lhotse"], correct: 2 }
-        ],
-        // Set 4 - Sports & Entertainment
-        [
-            { question: "How many players are on a basketball team?", options: ["5", "6", "7", "8"], correct: 0 },
-            { question: "Who directed the movie 'Inception'?", options: ["Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino"], correct: 1 },
-            { question: "In which sport is the term 'home run' used?", options: ["Baseball", "Cricket", "Soccer", "Tennis"], correct: 0 },
-            { question: "What is the highest-grossing film of all time?", options: ["Titanic", "Avatar", "Avengers: Endgame", "Star Wars"], correct: 1 },
-            { question: "How many rings are on the Olympic symbol?", options: ["4", "5", "6", "7"], correct: 1 }
-        ]
-    ];
+    try {
+        const response = await fetch('/api/questions');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const questionSets = await response.json();
 
-    // Shuffle questions within each set and randomize set order
-    gameState.questions = shuffleArray(allQuestions).map(set => shuffleArray(set));
+        // Shuffle sets and questions within each set
+        gameState.questions = shuffleArray([...questionSets]).map(set => shuffleArray([...set]));
 
-    console.log('Questions initialized successfully!');
-    console.log(`Total sets: ${gameState.questions.length}`);
-    console.log(`Questions per set: ${gameState.questions[0]?.length || 0}`);
-    console.log('Sample question from set 1:', gameState.questions[0]?.[0]);
+        console.log('Questions initialized successfully from API!');
+        console.log(`Total sets: ${gameState.questions.length}`);
+        console.log(`Questions per set: ${gameState.questions[0]?.length || 0}`);
+        console.log('Sample question from set 1:', gameState.questions[0]?.[0]);
+    } catch (error) {
+        console.error('Error initializing questions:', error);
+        // Fallback to hardcoded if API fails (optional, but for robustness)
+        alert('Failed to load questions from database. Using fallback data.');
+        // Hardcoded fallback: 4 sets of 5 questions each
+        gameState.questions = [
+            // Set 1: Science
+            [
+                { question: "What is the chemical symbol for water?", options: ["H2O", "CO2", "O2", "NaCl"], correct: 0 },
+                { question: "How many bones are in the human body?", options: ["206", "208", "210", "212"], correct: 0 },
+                { question: "What planet is known as the 'Red Planet'?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
+                { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi"], correct: 1 },
+                { question: "Which gas do plants absorb from the air?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 }
+            ],
+            // Set 2: History
+            [
+                { question: "In which year did World War II end?", options: ["1944", "1945", "1946", "1947"], correct: 1 },
+                { question: "Who was the first President of the United States?", options: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], correct: 2 },
+                { question: "Which ancient wonder was located in Alexandria?", options: ["Hanging Gardens", "Lighthouse", "Colossus", "Pyramids"], correct: 1 },
+                { question: "Who painted the Sistine Chapel ceiling?", options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"], correct: 1 },
+                { question: "In which year did the Titanic sink?", options: ["1910", "1912", "1914", "1916"], correct: 1 }
+            ],
+            // Set 3: Geography
+            [
+                { question: "What is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], correct: 1 },
+                { question: "Which country has the most natural lakes?", options: ["Canada", "Russia", "Finland", "Sweden"], correct: 0 },
+                { question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], correct: 2 },
+                { question: "Which is the smallest continent?", options: ["Europe", "Australia", "Africa", "Asia"], correct: 1 },
+                { question: "What is the highest mountain in the world?", options: ["K2", "Kangchenjunga", "Everest", "Lhotse"], correct: 2 }
+            ],
+            // Set 4: Sports & Entertainment
+            [
+                { question: "How many players are on a basketball team?", options: ["5", "6", "7", "8"], correct: 0 },
+                { question: "Who directed the movie 'Inception'?", options: ["Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino"], correct: 1 },
+                { question: "In which sport is the term 'home run' used?", options: ["Baseball", "Cricket", "Soccer", "Tennis"], correct: 0 },
+                { question: "What is the highest-grossing film of all time?", options: ["Titanic", "Avatar", "Avengers: Endgame", "Star Wars"], correct: 1 },
+                { question: "How many rings are on the Olympic symbol?", options: ["4", "5", "6", "7"], correct: 1 }
+            ]
+        ];
+        gameState.questions = shuffleArray([...gameState.questions]).map(set => shuffleArray([...set]));
+        console.log('Fallback questions loaded successfully!');
+        console.log(`Total fallback sets: ${gameState.questions.length}`);
+    }
 }
 
-function generateRandomQuestion(topic) {
-    console.log(`Generating question for topic: ${topic}`);
-    const templates = {
-        "Science": [
-            { q: "What is the chemical symbol for water?", a: ["H2O", "CO2", "O2", "NaCl"], c: 0 },
-            { q: "How many bones are in the human body?", a: ["206", "208", "210", "212"], c: 0 },
-            { q: "What planet is known as the 'Red Planet'?", a: ["Venus", "Mars", "Jupiter", "Saturn"], c: 1 },
-            { q: "What is the powerhouse of the cell?", a: ["Nucleus", "Mitochondria", "Ribosome", "Golgi"], c: 1 },
-            { q: "Which gas do plants absorb from the air?", a: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], c: 1 }
-        ],
-        "History": [
-            { q: "In which year did World War II end?", a: ["1944", "1945", "1946", "1947"], c: 1 },
-            { q: "Who was the first President of the United States?", a: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], c: 2 },
-            { q: "Which ancient wonder was located in Alexandria?", a: ["Hanging Gardens", "Lighthouse", "Colossus", "Pyramids"], c: 1 },
-            { q: "Who painted the Sistine Chapel ceiling?", a: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"], c: 1 },
-            { q: "In which year did the Titanic sink?", a: ["1910", "1912", "1914", "1916"], c: 1 }
-        ],
-        "Geography": [
-            { q: "What is the longest river in the world?", a: ["Amazon", "Nile", "Yangtze", "Mississippi"], c: 1 },
-            { q: "Which country has the most natural lakes?", a: ["Canada", "Russia", "Finland", "Sweden"], c: 0 },
-            { q: "What is the capital of Australia?", a: ["Sydney", "Melbourne", "Canberra", "Perth"], c: 2 },
-            { q: "Which is the smallest continent?", a: ["Europe", "Australia", "Africa", "Asia"], c: 1 },
-            { q: "What is the highest mountain in the world?", a: ["K2", "Kangchenjunga", "Everest", "Lhotse"], c: 2 }
-        ],
-        "Sports": [
-            { q: "How many players are on a basketball team?", a: ["5", "6", "7", "8"], c: 0 },
-            { q: "In which sport is the term 'home run' used?", a: ["Baseball", "Cricket", "Soccer", "Tennis"], c: 0 },
-            { q: "How many rings are on the Olympic symbol?", a: ["4", "5", "6", "7"], c: 1 },
-            { q: "Which country has won the most FIFA World Cups?", a: ["Germany", "Argentina", "Brazil", "Italy"], c: 2 },
-            { q: "In tennis, what does 'love' mean?", a: ["15", "30", "0", "40"], c: 2 }
-        ],
-        "Entertainment": [
-            { q: "Who directed the movie 'Inception'?", a: ["Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino"], c: 1 },
-            { q: "What is the highest-grossing film of all time?", a: ["Titanic", "Avatar", "Avengers: Endgame", "Star Wars"], c: 1 },
-            { q: "Which band released the album 'Abbey Road'?", a: ["Rolling Stones", "Beatles", "Pink Floyd", "Queen"], c: 1 },
-            { q: "Who played Jack Sparrow in Pirates of the Caribbean?", a: ["Orlando Bloom", "Johnny Depp", "Geoffrey Rush", "Keira Knightley"], c: 1 },
-            { q: "What is the name of the wizarding school in Harry Potter?", a: ["Durmstrang", "Beauxbatons", "Hogwarts", "Ilvermorny"], c: 2 }
-        ],
-        "Fun Facts": [
-            { q: "What animal is known as the 'King of the Jungle'?", a: ["Tiger", "Elephant", "Lion", "Giraffe"], c: 2 },
-            { q: "How many colors are in a rainbow?", a: ["5", "6", "7", "8"], c: 2 },
-            { q: "What is the largest animal in the world?", a: ["Elephant", "Blue Whale", "Giraffe", "Polar Bear"], c: 1 },
-            { q: "Which fruit is known as the 'king of fruits' in Southeast Asia?", a: ["Mango", "Durian", "Pineapple", "Banana"], c: 1 },
-            { q: "What is the only food that doesn't spoil?", a: ["Rice", "Honey", "Salt", "Sugar"], c: 1 }
-        ],
-        "Riddles": [
-            { q: "What has keys but can't open locks?", a: ["Piano", "Computer", "Car", "House"], c: 0 },
-            { q: "What gets wetter as it dries?", a: ["Towel", "Hair", "Clothes", "Sponge"], c: 0 },
-            { q: "What has a head, a tail, but no body?", a: ["Snake", "Coin", "Comet", "Arrow"], c: 1 },
-            { q: "What can you catch but not throw?", a: ["Ball", "Cold", "Fish", "Bird"], c: 1 },
-            { q: "What has one eye but can't see?", a: ["Cyclops", "Needle", "Camera", "Storm"], c: 1 }
-        ]
-    };
-
-    const topicTemplates = templates[topic] || templates["Fun Facts"];
-    const randomIndex = Math.floor(Math.random() * topicTemplates.length);
-    const randomTemplate = topicTemplates[randomIndex];
-
-    console.log(`Selected template ${randomIndex} from ${topic}: ${randomTemplate.q}`);
-
-    const question = {
-        question: randomTemplate.q,
-        options: [...randomTemplate.a],
-        correct: randomTemplate.c
-    };
-
-    console.log(`Generated question: ${question.question}`);
-    console.log(`Options: ${question.options.join(', ')}`);
-    console.log(`Correct answer index: ${question.correct}`);
-
-    return question;
-}
 
 // Event listeners
 document.getElementById('single-player-btn').addEventListener('click', startSinglePlayer);
@@ -178,6 +120,10 @@ function startHosting() {
     gameState.isHost = true;
     gameState.gamePin = generatePin();
     initializeQuestions();
+    gameState.players = [{ name: "Host", score: 0, answers: [] }];
+    // Add dummy players for simulation
+    gameState.players.push({ name: "Player 2", score: 0, answers: [] });
+    gameState.players.push({ name: "Player 3", score: 0, answers: [] });
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('host-screen').classList.remove('hidden');
     document.getElementById('game-pin').textContent = gameState.gamePin;
@@ -287,9 +233,26 @@ function startTimer() {
         document.getElementById('timer').textContent = gameState.timeLeft;
         if (gameState.timeLeft <= 0) {
             clearInterval(gameState.timer);
-            nextQuestion();
+            handleTimeout();
         }
     }, 1000);
+}
+
+function handleTimeout() {
+    // Deduct points for timeout
+    const penalty = -10;
+    gameState.players[gameState.currentPlayerIndex].score += penalty;
+    
+    // Visual feedback: show time's up message? For now, just proceed
+    console.log(`Time's up for ${gameState.players[gameState.currentPlayerIndex].name}. Penalty: ${penalty}`);
+    
+    // Disable buttons
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.style.pointerEvents = 'none';
+    });
+    
+    updatePlayerList();
+    setTimeout(nextQuestion, 1500);
 }
 
 function selectAnswer(event) {
@@ -301,10 +264,15 @@ function selectAnswer(event) {
     if (isCorrect) {
         selectedBtn.classList.add('correct');
         // Award points based on time left
-        const points = gameState.timeLeft * 20;
+        const points = gameState.timeLeft * 10;
         gameState.players[gameState.currentPlayerIndex].score += points;
     } else {
         selectedBtn.classList.add('incorrect');
+        // Penalty for wrong answer
+        const penalty = -5;
+        gameState.players[gameState.currentPlayerIndex].score += penalty;
+        console.log(`Wrong answer for ${gameState.players[gameState.currentPlayerIndex].name}. Penalty: ${penalty}`);
+        
         // Show correct answer
         document.querySelectorAll('.answer-btn').forEach(btn => {
             if (btn.dataset.correct === 'true') {
@@ -374,7 +342,7 @@ function showLevelComplete() {
     waitingScreen.innerHTML = `
         <h2>🎉 Set ${completedSet} Complete!</h2>
         <p>Great job! You finished 5 questions.</p>
-        <p>Current Score: ${gameState.players[0].score} points</p>
+        <p>Current Score: ${gameState.players[gameState.currentPlayerIndex].score} points</p>
         <p>Loading Set ${nextSet}...</p>
     `;
 
@@ -405,18 +373,8 @@ function showResults() {
 
     // Update results with level completion info
     const resultsDiv = document.getElementById('results-screen');
-    const scoreElement = document.getElementById('player-score');
-    scoreElement.textContent = gameState.players[0].score;
-
-    // Add level completion message
-    const levelMessage = document.createElement('p');
-    levelMessage.textContent = `Congratulations! You completed all ${gameState.totalSets} levels with ${gameState.totalSets * gameState.questionsPerSet} questions!`;
-    levelMessage.style.fontSize = '1.2em';
-    levelMessage.style.color = '#007bff';
-    levelMessage.style.margin = '10px 0';
-
-    // Insert after the score
-    scoreElement.parentNode.insertBefore(levelMessage, scoreElement.nextSibling);
+    // For multi-player, leaderboard handles display; for single, it's the first player
+    updateLeaderboard();
 
     updateLeaderboard();
 

@@ -9,6 +9,16 @@
             "date": 1757290101712,
             "name": "/home/dataman/Desktop/R_Projects/quiz-app/logs/mcp-puppeteer-2025-09-08.log",
             "hash": "9495d732b9f82dbf12c42ecd693998a4acad2d32bdfbbc3efae68525a8859f4d"
+        },
+        {
+            "date": 1757368868199,
+            "name": "/home/dataman/Desktop/R_Projects/quiz-app/logs/mcp-puppeteer-2025-09-09.log",
+            "hash": "02dc9d4f519d1be6d2cbba18529e98a4f5ffbf08c7e8338f98dcd9caeb6de013"
+        },
+        {
+            "date": 1757537805723,
+            "name": "/home/dataman/Desktop/R_Projects/quiz-app/logs/mcp-puppeteer-2025-09-10.log",
+            "hash": "c5a694845460dd12ecb42e16397ebeaa16ad2779509baeaac99e35c950cae310"
         }
     ],
     "hashType": "sha256"
