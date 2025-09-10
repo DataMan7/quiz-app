@@ -102,8 +102,6 @@ document.getElementById('join-btn').addEventListener('click', showJoinScreen);
 document.getElementById('join-game-btn').addEventListener('click', joinGame);
 document.getElementById('submit-name-btn').addEventListener('click', submitName);
 document.getElementById('start-quiz-btn').addEventListener('click', startQuiz);
-document.getElementById('play-again-btn').addEventListener('click', playAgain);
-document.getElementById('back-to-menu-btn').addEventListener('click', backToMenu);
 
 document.querySelectorAll('.answer-btn').forEach(btn => {
     btn.addEventListener('click', selectAnswer);
@@ -393,7 +391,16 @@ function showLevelComplete() {
 }
 
 function showResults() {
+    console.log('Showing final results after 20 questions');
+
+    // Stop any running timer
+    if (gameState.timer) {
+        clearInterval(gameState.timer);
+        gameState.timer = null;
+    }
+
     document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('waiting-screen').classList.add('hidden');
 
     if (gameState.isHost && gameState.players.length > 1) {
         // Multi-player: show results on host screen
@@ -403,20 +410,47 @@ function showResults() {
         document.getElementById('results-screen').classList.remove('hidden');
     }
 
-    // Update results with level completion info
+    // Update results with creative display
     const resultsDiv = document.getElementById('results-screen');
-    // For multi-player, leaderboard handles display; for single, it's the first player
-    updateLeaderboard();
+    const sortedPlayers = gameState.players.sort((a, b) => b.score - a.score);
+    let leaderboardHTML = '<h3>🏆 Final Results - Quiz Master! 🎉</h3>';
+    sortedPlayers.forEach((player, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+        leaderboardHTML += `<p class="results-item animated">${medal} ${index + 1}. ${player.name}: ${player.score} points ${player.score >= 150 ? '🔥 Excellent!' : player.score >= 100 ? '👍 Good job!' : '💪 Keep trying!'}</p>`;
+    });
+    leaderboardHTML += `
+        <button id="reset-game-btn" class="btn-primary animated">🔄 Reset Game</button>
+        <button id="back-to-menu-btn" class="btn-secondary animated">🏠 Main Menu</button>
+    `;
+    resultsDiv.innerHTML = leaderboardHTML;
 
-    updateLeaderboard();
+    // Add simple animation class (fade-in)
+    const items = resultsDiv.querySelectorAll('.animated');
+    items.forEach((item, i) => {
+        item.style.animationDelay = `${i * 0.2}s`;
+    });
 
-    // Auto-restart with new questions after 5 seconds
-    setTimeout(() => {
-        autoRestartGame();
-    }, 5000);
+    updateLeaderboard(); // Legacy call if needed
+
+    // Manual restart only - no auto-restart
+    // Auto-back to menu after 10s if no interaction
+    const autoBackTimeout = setTimeout(() => {
+        console.log('No interaction, auto-backing to menu');
+        backToMenu();
+    }, 10000);
+
+    // Clear timeout on button clicks
+    document.getElementById('reset-game-btn').addEventListener('click', () => {
+        clearTimeout(autoBackTimeout);
+        playAgain();
+    });
+    document.getElementById('back-to-menu-btn').addEventListener('click', () => {
+        clearTimeout(autoBackTimeout);
+        backToMenu();
+    });
+
+    console.log('Results shown; waiting for user interaction or 10s auto-back');
 }
-
-console.log('Results shown; auto-restart in 5s');
 
 function autoRestartGame() {
     console.log('Auto-restarting game: Resetting state and re-fetching questions');
@@ -515,4 +549,3 @@ function backToMenu() {
 }
 
 // Initialize the app
-initializeQuestions();
