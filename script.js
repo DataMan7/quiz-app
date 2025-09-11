@@ -109,7 +109,7 @@ document.querySelectorAll('.answer-btn').forEach(btn => {
 
 async function startSinglePlayer() {
     gameState.isHost = false;
-    gameState.players = [{ name: "Player", score: 0, answers: [] }];
+    gameState.players = [{ name: "Player", score: 0, answers: [], setsScores: [0, 0, 0, 0] }];
     await initializeQuestions();
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('question-area').classList.remove('hidden');
@@ -120,10 +120,10 @@ async function startHosting() {
     gameState.isHost = true;
     gameState.gamePin = generatePin();
     await initializeQuestions();
-    gameState.players = [{ name: "Host", score: 0, answers: [] }];
+    gameState.players = [{ name: "Host", score: 0, answers: [], setsScores: [0, 0, 0, 0] }];
     // Add dummy players for simulation
-    gameState.players.push({ name: "Player 2", score: 0, answers: [] });
-    gameState.players.push({ name: "Player 3", score: 0, answers: [] });
+    gameState.players.push({ name: "Player 2", score: 0, answers: [], setsScores: [0, 0, 0, 0] });
+    gameState.players.push({ name: "Player 3", score: 0, answers: [], setsScores: [0, 0, 0, 0] });
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('host-screen').classList.remove('hidden');
     document.getElementById('game-pin').textContent = gameState.gamePin;
@@ -148,7 +148,7 @@ function joinGame() {
 function submitName() {
     const name = document.getElementById('player-name').value;
     if (name) {
-        gameState.players.push({ name, score: 0, answers: [] });
+        gameState.players.push({ name, score: 0, answers: [], setsScores: [0, 0, 0, 0] });
         document.getElementById('player-name-input').classList.add('hidden');
         document.getElementById('waiting-screen').classList.remove('hidden');
         updatePlayerList();
@@ -253,6 +253,8 @@ function startTimer() {
 function handleTimeout() {
     // Deduct points for timeout
     const penalty = -10;
+    const currentSet = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+    gameState.players[gameState.currentPlayerIndex].setsScores[currentSet] += penalty;
     gameState.players[gameState.currentPlayerIndex].score += penalty;
     
     // Visual feedback: show time's up message? For now, just proceed
@@ -277,11 +279,15 @@ function selectAnswer(event) {
         selectedBtn.classList.add('correct');
         // Award points based on time left
         const points = gameState.timeLeft * 10;
+        const currentSet = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+        gameState.players[gameState.currentPlayerIndex].setsScores[currentSet] += points;
         gameState.players[gameState.currentPlayerIndex].score += points;
     } else {
         selectedBtn.classList.add('incorrect');
         // Penalty for wrong answer
         const penalty = -5;
+        const currentSet = Math.floor(gameState.currentQuestionIndex / gameState.questionsPerSet);
+        gameState.players[gameState.currentPlayerIndex].setsScores[currentSet] += penalty;
         gameState.players[gameState.currentPlayerIndex].score += penalty;
         console.log(`Wrong answer for ${gameState.players[gameState.currentPlayerIndex].name}. Penalty: ${penalty}`);
         
@@ -416,11 +422,26 @@ function showResults() {
     let leaderboardHTML = '<h3>🏆 Final Results - Quiz Master! 🎉</h3>';
     sortedPlayers.forEach((player, index) => {
         const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-        leaderboardHTML += `<p class="results-item animated">${medal} ${index + 1}. ${player.name}: ${player.score} points ${player.score >= 150 ? '🔥 Excellent!' : player.score >= 100 ? '👍 Good job!' : '💪 Keep trying!'}</p>`;
+        const performance = player.score >= 150 ? '🔥 Excellent!' : player.score >= 100 ? '👍 Good job!' : '💪 Keep trying!';
+        leaderboardHTML += `
+            <div class="player-result animated">
+                <h4>${medal} ${index + 1}. ${player.name}</h4>
+                <p><strong>Overall Score:</strong> ${player.score} points ${performance}</p>
+                <button class="view-details-btn" onclick="toggleDetails(this)">📊 View Set Breakdown</button>
+                <div class="set-details hidden">
+                    ${player.setsScores.map((setScore, setIdx) => `
+                        <p>Set ${setIdx + 1}: ${setScore} points ${setScore >= 40 ? '⭐ Great!' : setScore >= 20 ? '👍 Solid!' : '💪 Improving!'}</p>
+                    `).join('')}
+                </div>
+            </div>
+        `;
     });
     leaderboardHTML += `
-        <button id="reset-game-btn" class="btn-primary animated">🔄 Reset Game</button>
-        <button id="back-to-menu-btn" class="btn-secondary animated">🏠 Main Menu</button>
+        <div class="interactive-section animated">
+            <p>🎉 Share your victory or challenge friends!</p>
+            <button id="reset-game-btn" class="btn-primary">🔄 Play Again</button>
+            <button id="back-to-menu-btn" class="btn-secondary">🏠 Main Menu</button>
+        </div>
     `;
     resultsDiv.innerHTML = leaderboardHTML;
 
@@ -547,5 +568,17 @@ function backToMenu() {
     // Re-initialize questions
     initializeQuestions();
 }
+
+// Toggle function for set details
+window.toggleDetails = function(btn) {
+    const details = btn.nextElementSibling;
+    if (details.classList.contains('hidden')) {
+        details.classList.remove('hidden');
+        btn.textContent = '🔒 Hide Details';
+    } else {
+        details.classList.add('hidden');
+        btn.textContent = '📊 View Set Breakdown';
+    }
+};
 
 // Initialize the app
