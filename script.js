@@ -107,19 +107,19 @@ document.querySelectorAll('.answer-btn').forEach(btn => {
     btn.addEventListener('click', selectAnswer);
 });
 
-function startSinglePlayer() {
+async function startSinglePlayer() {
     gameState.isHost = false;
     gameState.players = [{ name: "Player", score: 0, answers: [] }];
-    initializeQuestions();
+    await initializeQuestions();
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('question-area').classList.remove('hidden');
     showQuestion();
 }
 
-function startHosting() {
+async function startHosting() {
     gameState.isHost = true;
     gameState.gamePin = generatePin();
-    initializeQuestions();
+    await initializeQuestions();
     gameState.players = [{ name: "Host", score: 0, answers: [] }];
     // Add dummy players for simulation
     gameState.players.push({ name: "Player 2", score: 0, answers: [] });
