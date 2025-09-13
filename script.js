@@ -539,15 +539,26 @@ function playAgain() {
 }
 
 function backToMenu() {
+    console.log('backToMenu called');
     // Reset all screens
-    document.getElementById('results-screen').classList.add('hidden');
-    document.getElementById('host-screen').classList.add('hidden');
-    document.getElementById('player-screen').classList.add('hidden');
-    document.getElementById('question-area').classList.add('hidden');
-    document.getElementById('waiting-screen').classList.add('hidden');
+    const resultsScreen = document.getElementById('results-screen');
+    if (resultsScreen) resultsScreen.classList.add('hidden');
+
+    const hostScreen = document.getElementById('host-screen');
+    if (hostScreen) hostScreen.classList.add('hidden');
+
+    const playerScreen = document.getElementById('player-screen');
+    if (playerScreen) playerScreen.classList.add('hidden');
+
+    const questionArea = document.getElementById('question-area');
+    if (questionArea) questionArea.classList.add('hidden');
+
+    const waitingScreen = document.getElementById('waiting-screen');
+    if (waitingScreen) waitingScreen.classList.add('hidden');
 
     // Show start screen
-    document.getElementById('start-screen').classList.remove('hidden');
+    const startScreen = document.getElementById('start-screen');
+    if (startScreen) startScreen.classList.remove('hidden');
 
     // Reset game state
     gameState = {
@@ -567,6 +578,7 @@ function backToMenu() {
 
     // Re-initialize questions
     initializeQuestions();
+    console.log('backToMenu completed');
 }
 
 // Make backToMenu globally available for onclick
