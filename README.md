@@ -4,7 +4,7 @@
 Jua is an engaging, Kahoot-inspired quiz game designed for fun learning and competition. Players answer multiple-choice questions across 4 sets of 5 questions each (20 total per game), earning points based on correct answers and time left. The game supports single-player mode and multi-player (host/join via PIN, with simulated players for testing). Questions are dynamically loaded from a Supabase database for variety, with fallback to static data for offline/resilience.
 
 Key Features:
-- **Random Questions**: 100+ questions from diverse topics (Science, History, Geography, Sports, Movies, Riddles, Math, Literature) shuffled for each playthrough.
+- **Random Questions**: 100+ questions focused on African context and stories (Science, History, Geography, Sports, Movies, Riddles, Math, Literature with African themes) shuffled for each playthrough.
 - **Scoring**: 10 points per second left on correct answer; -5 for wrong, -10 for timeout.
 - **Creative UI**: Animated timers, feedback (green/red buttons with pulse/shake), level complete screens with 5s countdown, emoji-rich results.
 - **Progression**: 5s creative loading between sets ("Set X Conquered! 🚀 Gear up for Set Y..."); full 20 questions before interactive results.
@@ -48,4 +48,4 @@ Key Features:
 MIT License – Free to use/modify.
 
 ---
-Built with ❤️ by Kilo Code and Dataman
+Built with ❤️ by Kilo Code - Dataman
