@@ -48,4 +48,4 @@ Key Features:
 MIT License – Free to use/modify.
 
 ---
-Built with ❤️ by Kilo Code
+Built with ❤️ by Kilo Code and Dataman
