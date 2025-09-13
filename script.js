@@ -581,4 +581,7 @@ window.toggleDetails = function(btn) {
     }
 };
 
+// Logo click to return to home page
+document.getElementById('logo').addEventListener('click', backToMenu);
+
 // Initialize the app
