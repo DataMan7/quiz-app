@@ -569,6 +569,9 @@ function backToMenu() {
     initializeQuestions();
 }
 
+// Make backToMenu globally available for onclick
+window.backToMenu = backToMenu;
+
 // Toggle function for set details
 window.toggleDetails = function(btn) {
     const details = btn.nextElementSibling;
