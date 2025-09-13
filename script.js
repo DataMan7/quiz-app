@@ -582,6 +582,9 @@ window.toggleDetails = function(btn) {
 };
 
 // Logo click to return to home page
-document.getElementById('logo').addEventListener('click', backToMenu);
+document.getElementById('logo-image').addEventListener('click', function(event) {
+    console.log('Logo clicked, returning to home page');
+    backToMenu();
+});
 
 // Initialize the app
