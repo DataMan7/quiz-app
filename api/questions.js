@@ -34,9 +34,20 @@ export default async function handler(req, res) {
       if (!sets[q.set_id]) {
         sets[q.set_id] = [];
       }
+      let options;
+      try {
+        options = JSON.parse(q.options);
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          // Fallback: treat as comma-separated string
+          options = q.options.split(',').map(opt => opt.trim());
+        } else {
+          throw e;
+        }
+      }
       sets[q.set_id].push({
         question: q.question,
-        options: JSON.parse(q.options),
+        options: options,
         correct: q.correct_index
       });
     });
