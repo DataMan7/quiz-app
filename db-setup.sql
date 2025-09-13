@@ -7,113 +7,172 @@ CREATE TABLE IF NOT EXISTS public.questions (
     correct_index INTEGER NOT NULL
 );
 
--- Original 20 questions (sets 1-4)
-INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
-(1, 'What is the chemical symbol for water?', '["H2O", "CO2", "O2", "NaCl"]'::jsonb, 0),
-(1, 'How many bones are in the human body?', '["206", "208", "210", "212"]'::jsonb, 0),
-(1, 'What planet is known as the "Red Planet"?', '["Venus", "Mars", "Jupiter", "Saturn"]'::jsonb, 1),
-(1, 'What is the powerhouse of the cell?', '["Nucleus", "Mitochondria", "Ribosome", "Golgi"]'::jsonb, 1),
-(1, 'Which gas do plants absorb from the air?', '["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"]'::jsonb, 1),
-(2, 'In which year did World War II end?', '["1944", "1945", "1946", "1947"]'::jsonb, 1),
-(2, 'Who was the first President of the United States?', '["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"]'::jsonb, 2),
-(2, 'Which ancient wonder was located in Alexandria?', '["Hanging Gardens", "Lighthouse", "Colossus", "Pyramids"]'::jsonb, 1),
-(2, 'Who painted the Sistine Chapel ceiling?', '["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"]'::jsonb, 1),
-(2, 'In which year did the Titanic sink?', '["1910", "1912", "1914", "1916"]'::jsonb, 1),
-(3, 'What is the longest river in the world?', '["Amazon", "Nile", "Yangtze", "Mississippi"]'::jsonb, 1),
-(3, 'Which country has the most natural lakes?', '["Canada", "Russia", "Finland", "Sweden"]'::jsonb, 0),
-(3, 'What is the capital of Australia?', '["Sydney", "Melbourne", "Canberra", "Perth"]'::jsonb, 2),
-(3, 'Which is the smallest continent?', '["Europe", "Australia", "Africa", "Asia"]'::jsonb, 1),
-(3, 'What is the highest mountain in the world?', '["K2", "Kangchenjunga", "Everest", "Lhotse"]'::jsonb, 2),
-(4, 'How many players are on a basketball team?', '["5", "6", "7", "8"]'::jsonb, 0),
-(4, 'Who directed the movie "Inception"?', '["Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino"]'::jsonb, 1),
-(4, 'In which sport is the term "home run" used?', '["Baseball", "Cricket", "Soccer", "Tennis"]'::jsonb, 0),
-(4, 'What is the highest-grossing film of all time?', '["Titanic", "Avatar", "Avengers: Endgame", "Star Wars"]'::jsonb, 1),
-(4, 'How many rings are on the Olympic symbol?', '["4", "5", "6", "7"]'::jsonb, 1);
+-- Clear existing questions to avoid duplicates (optional: comment out if you want to keep old ones)
+DELETE FROM public.questions;
 
--- Additional 70 questions (sets 5-18)
+-- African-themed questions: 100 questions across 20 sets of 5, focusing on African context and stories
+-- All apostrophes in question strings escaped as '' for Postgres SQL
+-- Set 1: African History - Independence and Leaders
 INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
-(5, 'What is the speed of light?', '["300000 km/s", "150000 km/s", "450000 km/s", "600000 km/s"]'::jsonb, 0),
-(5, 'What is the atomic number of carbon?', '["6", "8", "12", "14"]'::jsonb, 0),
-(5, 'Which scientist developed the theory of relativity?', '["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"]'::jsonb, 1),
-(5, 'What is the pH of pure water?', '["7", "5", "9", "0"]'::jsonb, 0),
-(5, 'What is the largest organ in the human body?', '["Liver", "Skin", "Heart", "Brain"]'::jsonb, 1),
-(6, 'What does DNA stand for?', '["Deoxyribonucleic acid", "Deoxyribose nucleic acid", "Dioxyribonucleic acid", "Deoxyribonucleic acid"]'::jsonb, 0),
-(6, 'Which planet has the most moons?', '["Jupiter", "Saturn", "Uranus", "Neptune"]'::jsonb, 1),
-(6, 'What is the chemical formula for salt?', '["NaCl", "KCl", "CaCl", "MgCl"]'::jsonb, 0),
-(6, 'Who discovered penicillin?', '["Alexander Fleming", "Louis Pasteur", "Robert Koch", "Jonas Salk"]'::jsonb, 0),
-(6, 'What is the boiling point of water in Celsius?', '["100", "0", "50", "212"]'::jsonb, 0),
-(7, 'Who was the first emperor of Rome?', '["Julius Caesar", "Augustus", "Nero", "Caligula"]'::jsonb, 1),
-(7, 'In which year did the American Revolution begin?', '["1775", "1776", "1783", "1492"]'::jsonb, 0),
-(7, 'Who built the Taj Mahal?', '["Shah Jahan", "Akbar", "Babur", "Aurangzeb"]'::jsonb, 0),
-(7, 'What was the name of the ship that carried the Pilgrims to America?', '["Mayflower", "Santa Maria", "Nina", "Pinta"]'::jsonb, 0),
-(7, 'Who was the first woman to fly solo across the Atlantic?', '["Amelia Earhart", "Bessie Coleman", "Harriet Quimby", "Jacqueline Cochran"]'::jsonb, 0),
-(8, 'What year did the Berlin Wall fall?', '["1989", "1991", "1985", "1990"]'::jsonb, 0),
-(8, 'Who was the leader of the Bolshevik Revolution?', '["Vladimir Lenin", "Joseph Stalin", "Leon Trotsky", "Karl Marx"]'::jsonb, 0),
-(8, 'In which year was the Magna Carta signed?', '["1215", "1066", "1348", "1492"]'::jsonb, 0),
-(8, 'Who was the first pharaoh of Egypt?', '["Narmer", "Tutankhamun", "Ramses II", "Cleopatra"]'::jsonb, 0),
-(8, 'What was the main cause of the French Revolution?', '["Taxation without representation", "Monarchy abuse", "Religious conflict", "Foreign invasion"]'::jsonb, 1),
-(9, 'What is the largest desert in the world?', '["Sahara", "Gobi", "Antarctic", "Arabian"]'::jsonb, 2),
-(9, 'Which country is known as the Land of the Rising Sun?', '["China", "Japan", "Korea", "Thailand"]'::jsonb, 1),
-(9, 'What is the capital of Canada?', '["Toronto", "Vancouver", "Ottawa", "Montreal"]'::jsonb, 2),
-(9, 'Which ocean is the deepest?', '["Atlantic", "Indian", "Arctic", "Pacific"]'::jsonb, 3),
-(9, 'What is the longest mountain range in the world?', '["Himalayas", "Andes", "Rockies", "Alps"]'::jsonb, 1),
-(10, 'Which continent is home to the Amazon Rainforest?', '["Africa", "South America", "Asia", "Australia"]'::jsonb, 1),
-(10, 'What is the smallest country in the world?', '["Monaco", "Vatican City", "San Marino", "Liechtenstein"]'::jsonb, 1),
-(10, 'Which river flows through Paris?', '["Thames", "Seine", "Danube", "Rhine"]'::jsonb, 1),
-(10, 'What is the largest lake in Africa?', '["Lake Victoria", "Lake Tanganyika", "Lake Malawi", "Lake Chad"]'::jsonb, 0),
-(10, 'Which country has the most volcanoes?', '["Indonesia", "Japan", "Iceland", "Italy"]'::jsonb, 0),
-(11, 'In which sport is the term "slam dunk" used?', '["Basketball", "Volleyball", "Tennis", "Badminton"]'::jsonb, 0),
-(11, 'How many players are on a soccer team?', '["11", "9", "7", "5"]'::jsonb, 0),
-(11, 'Who won the most Olympic gold medals?', '["Michael Phelps", "Usain Bolt", "Carl Lewis", "Jesse Owens"]'::jsonb, 0),
-(11, 'What is the distance of a marathon?', '["42.195 km", "50 km", "30 km", "21.1 km"]'::jsonb, 0),
-(11, 'In which sport do you perform a "birdie"?', '["Golf", "Badminton", "Tennis", "Cricket"]'::jsonb, 1),
-(12, 'Who is known as the "King of Football"?', '["Lionel Messi", "Cristiano Ronaldo", "Pelé", "Maradona"]'::jsonb, 2),
-(12, 'What is the main equipment in tennis?', '["Bat", "Racket", "Stick", "Club"]'::jsonb, 1),
-(12, 'How many holes are on a standard golf course?', '["9", "18", "12", "15"]'::jsonb, 1),
-(12, 'In which year was the first modern Olympics held?', '["1896", "1900", "1880", "1920"]'::jsonb, 0),
-(12, 'Who holds the record for the most home runs in MLB?', '["Babe Ruth", "Hank Aaron", "Barry Bonds", "Albert Pujols"]'::jsonb, 2),
-(13, 'Who played the role of Harry Potter?', '["Daniel Radcliffe", "Rupert Grint", "Emma Watson", "Tom Felton"]'::jsonb, 0),
-(13, 'What is the name of the fictional wizarding school in Harry Potter?', '["Hogwarts", "Durmstrang", "Beauxbatons", "Ilvermorny"]'::jsonb, 0),
-(13, 'Which movie won the first Oscar?', '["Wings", "The Jazz Singer", "Sunrise", "7th Heaven"]'::jsonb, 0),
-(13, 'Who is the lead singer of the Beatles?', '["John Lennon", "Paul McCartney", "George Harrison", "Ringo Starr"]'::jsonb, 0),
-(13, 'What year did Star Wars Episode IV release?', '["1977", "1980", "1975", "1983"]'::jsonb, 0),
-(14, 'Who directed Jurassic Park?', '["Steven Spielberg", "George Lucas", "James Cameron", "Christopher Nolan"]'::jsonb, 0),
-(14, 'What is the highest-grossing animated film?', '["The Lion King", "Finding Nemo", "Frozen II", "Toy Story 3"]'::jsonb, 2),
-(14, 'Who won the first Academy Award for Best Actor?', '["Emil Jannings", "Warner Baxter", "George Arliss", "Lionel Barrymore"]'::jsonb, 0),
-(14, 'What band is known for the song "Bohemian Rhapsody"?', '["The Beatles", "Queen", "Led Zeppelin", "The Rolling Stones"]'::jsonb, 1),
-(14, 'In which year was the first Superman comic published?', '["1938", "1940", "1935", "1945"]'::jsonb, 0),
-(15, 'What is the only mammal that can fly?', '["Flying squirrel", "Bat", "Pterodactyl", "Sugar glider"]'::jsonb, 1),
-(15, 'How many hearts does an octopus have?', '["1", "2", "3", "4"]'::jsonb, 2),
-(15, 'What is the rarest blood type?', '["O-", "AB+", "B-", "A+"]'::jsonb, 1),
-(15, 'Which animal can hold its breath the longest?', '["Human", "Elephant", "Sperm whale", "Sea lion"]'::jsonb, 2),
-(15, 'What is the smallest bone in the human body?', '["Femur", "Stapes", "Humerus", "Tibia"]'::jsonb, 1),
-(16, 'How many taste buds does the average human have?', '["1000", "5000", "10000", "2000"]'::jsonb, 1),
-(16, 'What is the only letter that doesnt appear on the periodic table?', '["J", "Q", "X", "Z"]'::jsonb, 0),
-(16, 'Which fruit is known as the "king of fruits" in Southeast Asia?', '["Mango", "Durian", "Pineapple", "Banana"]'::jsonb, 1),
-(16, 'What is the only food that doesnt spoil?', '["Rice", "Honey", "Salt", "Sugar"]'::jsonb, 1),
-(16, 'How many colors are in a rainbow?', '["5", "6", "7", "8"]'::jsonb, 2),
-(17, 'What has keys but cant open locks?', '["Piano", "Computer", "Car", "House"]'::jsonb, 0),
-(17, 'What gets wetter as it dries?', '["Towel", "Hair", "Clothes", "Sponge"]'::jsonb, 0),
-(17, 'What has a head, a tail, but no body?', '["Snake", "Coin", "Comet", "Arrow"]'::jsonb, 1),
-(17, 'What can you catch but not throw?', '["Ball", "Cold", "Fish", "Bird"]'::jsonb, 1),
-(17, 'What has one eye but cant see?', '["Cyclops", "Needle", "Camera", "Storm"]'::jsonb, 1),
-(18, 'I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?', '["Echo", "Ghost", "Wind", "Shadow"]'::jsonb, 0),
-(18, 'The more you take, the more you leave behind. What am I?', '["Footsteps", "Memories", "Time", "Money"]'::jsonb, 0),
-(18, 'I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?', '["Map", "Globe", "Atlas", "Planet"]'::jsonb, 0),
-(18, 'What can travel around the world while staying in a corner?', '["Stamp", "Coin", "Key", "Ring"]'::jsonb, 0),
-(18, 'What has a neck but no head?', '["Bottle", "Shirt", "Guitar", "River"]'::jsonb, 0),
-(19, 'What is 2 + 2?', '["3", "4", "5", "6"]'::jsonb, 1),
-(19, 'What is the square root of 16?', '["2", "4", "8", "16"]'::jsonb, 1),
-(19, 'What is the value of pi (approximately)?', '["3.14", "2.71", "1.41", "9.81"]'::jsonb, 0),
-(19, 'How many sides does a hexagon have?', '["5", "6", "7", "8"]'::jsonb, 1),
-(19, 'What is 10% of 100?', '["10", "20", "5", "1"]'::jsonb, 0),
-(20, 'Who wrote "Romeo and Juliet"?', '["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"]'::jsonb, 1),
-(20, 'What is the name of the wizard in "The Lord of the Rings"?', '["Gandalf", "Saruman", "Radagast", "Dumbledore"]'::jsonb, 0),
-(20, 'In "To Kill a Mockingbird", who is the main character?', '["Scout Finch", "Atticus Finch", "Boo Radley", "Tom Robinson"]'::jsonb, 0),
-(20, 'Who wrote "1984"?', '["George Orwell", "Aldous Huxley", "Ray Bradbury", "Philip K. Dick"]'::jsonb, 0),
-(20, 'What is the famous line from "Hamlet"?', '["To be or not to be", "All the world is a stage", "Et tu, Brute", "Friends, Romans, countrymen"]'::jsonb, 0);
+(1, 'Who led Kenya to independence in 1963?', '["Jomo Kenyatta", "Nelson Mandela", "Kwame Nkrumah", "Julius Nyerere"]'::jsonb, 0),
+(1, 'In what year did South Africa end apartheid?', '["1990", "1994", "1985", "2000"]'::jsonb, 1),
+(1, 'Who was the first president of Ghana?', '["Kwame Nkrumah", "Haile Selassie", "Idi Amin", "Mobutu Sese Seko"]'::jsonb, 0),
+(1, 'What event is known as the "Year of Africa" for many independences?', '["1950", "1960", "1970", "1980"]'::jsonb, 1),
+(1, 'Who founded the Pan-African Congress?', '["Robert Sobukwe", "Steve Biko", "Walter Sisulu", "Albert Luthuli"]'::jsonb, 0);
+
+-- Set 2: African Geography - Rivers and Lakes
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(2, 'Which African river is the longest in the world?', '["Amazon", "Nile", "Congo", "Zambezi"]'::jsonb, 1),
+(2, 'What is the largest lake in Africa by area?', '["Lake Malawi", "Lake Tanganyika", "Lake Victoria", "Lake Chad"]'::jsonb, 2),
+(2, 'Which desert covers much of North Africa?', '["Gobi", "Sahara", "Kalahari", "Namib"]'::jsonb, 1),
+(2, 'Mount Kilimanjaro is located in which country?', '["Kenya", "Tanzania", "Uganda", "Ethiopia"]'::jsonb, 1),
+(2, 'The Congo Basin is primarily in which region?', '["East Africa", "Central Africa", "Southern Africa", "North Africa"]'::jsonb, 1);
+
+-- Set 3: African Science and Inventions
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(3, 'Who is known as the father of African surgery?', '["Wangari Maathai", "Philip Emeagwali", "Magdalene A. N. A. Williams", "Beth Brown"]'::jsonb, 2),
+(3, 'What African invention is the "talking drum" used for?', '["Music only", "Communication like Morse code", "Farming tool", "Weapon"]'::jsonb, 1),
+(3, 'Which Kenyan won the Nobel for environmental work?', '["Wangari Maathai", "Kofi Annan", "Ellen Johnson Sirleaf", "Desmond Tutu"]'::jsonb, 0),
+(3, 'The supercomputer "Connection Machine" was contributed to by which Nigerian?', '["Philip Emeagwali", "Bart Nnaji", "Philip S. Emeagwali", "Charles O. Holliday"]'::jsonb, 0),
+(3, 'What African plant is used in malaria treatment?', '["Neem", "Artemisia annua", "Aloe vera", "Moringa"]'::jsonb, 1);
+
+-- Set 4: African Literature
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(4, 'Who wrote "Things Fall Apart"?', '["Chinua Achebe", "Ngugi wa Thiong''o", "Wole Soyinka", "Bessie Head"]'::jsonb, 0),
+(4, 'What is the main theme of "Petals of Blood" by Ngugi?', '["Colonialism", "Post-colonial Kenya", "Love story", "War"]'::jsonb, 1),
+(4, 'Which Nigerian won the Nobel Prize for Literature?', '["Wole Soyinka", "Chinua Achebe", "Ben Okri", "Ama Ata Aidoo"]'::jsonb, 0),
+(4, ' "Half of a Yellow Sun" is set during which event?', '["Biafran War", "Apartheid", "Mau Mau Uprising", "Slave trade"]'::jsonb, 0),
+(4, 'Who is the author of "Nervous Conditions"?', '["Tsitsi Dangarembga", "Nadine Gordimer", "Doris Lessing", "J.M. Coetzee"]'::jsonb, 0);
+
+-- Set 5: African Sports
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(5, 'Who is Kenya''s legendary long-distance runner?', '["Eliud Kipchoge", "David Rudisha", "Wilson Kipketer", "Paul Tergat"]'::jsonb, 0),
+(5, 'Which African country won the FIFA World Cup?', '["Nigeria", "Cameroon", "None", "Egypt"]'::jsonb, 2),
+(5, 'Who is the South African rugby captain known for Springboks?', '["Siya Kolisi", "Bryan Habana", "François Pienaar", "Cheetahs"]'::jsonb, 0),
+(5, 'In which sport is Haile Gebrselassie famous?', '["Marathon running", "Boxing", "Cricket", "Swimming"]'::jsonb, 0),
+(5, 'Africa Cup of Nations is won most by which country?', '["Egypt", "Cameroon", "Ghana", "Nigeria"]'::jsonb, 0);
+
+-- Set 6: African Movies and Film
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(6, 'Who directed "Black Panther" with African influences?', '["Ryan Coogler", "Ava DuVernay", "Jordan Peele", "Spike Lee"]'::jsonb, 0),
+(6, 'What is the famous Nollywood film industry in?', '["Lagos, Nigeria", "Johannesburg, South Africa", "Nairobi, Kenya", "Cairo, Egypt"]'::jsonb, 0),
+(6, 'Which film won Oscar for Best International Feature from South Africa?', '["Tsotsi", "District 9", "Invictus", "Blood Diamond"]'::jsonb, 0),
+(6, ' "Queen of Katwe" is based on a Ugandan chess player''s story.', '["True", "False", "Partly true", "No"]'::jsonb, 0),
+(6, 'Who is the Egyptian actor in "The Message"?', '["Omar Sharif", "Adel Emam", "Ahmed Zaki", "Nour El-Sherif"]'::jsonb, 0);
+
+-- Set 7: African Riddles and Folklore
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(7, 'In Anansi stories, who is the spider trickster?', '["Anansi", "Brer Rabbit", "Coyote", "Fox"]'::jsonb, 0),
+(7, 'What African riddle: "I have cities but no houses" (from folklore)?', '["Map", "Story", "Dream", "River"]'::jsonb, 0),
+(7, 'In Zulu folklore, who is the sky god?', '["Unkulunkulu", "Nyame", "Amma", "Olorun"]'::jsonb, 0),
+(7, 'What Yoruba riddle: "White inside, black outside"?', '["Coconut", "Egg", "Book", "Drum"]'::jsonb, 0),
+(7, 'Anansi stole what from the sky god in Akan tales?', '["All stories", "Wisdom", "Fire", "Water"]'::jsonb, 0);
+
+-- Set 8: African Math and Numbers
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(8, 'What ancient African civilization used base-10 math?', '["Egyptians", "Maya", "Greeks", "Romans"]'::jsonb, 0),
+(8, 'The Ishango bone from Congo shows early what?', '["Counting", "Calendar", "Geometry", "Astronomy"]'::jsonb, 0),
+(8, 'What is 15% of 200 in African trade math context?', '["30", "25", "40", "20"]'::jsonb, 0),
+(8, 'Fibonacci sequence influenced by which African mathematician?', '["Al-Khwarizmi", "Ibn al-Haytham", "Omar Khayyam", "None"]'::jsonb, 3),
+(8, 'How many sides does a traditional African adinkra symbol have?', '["4", "6", "8", "Varies"]'::jsonb, 3);
+
+-- Set 9: African Geography - Countries and Capitals
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(9, 'What is the capital of Ethiopia?', '["Nairobi", "Addis Ababa", "Mogadishu", "Khartoum"]'::jsonb, 1),
+(9, 'Which country is shaped like a horn?', '["Somalia", "Libya", "Algeria", "Sudan"]'::jsonb, 0),
+(9, 'The Sahel region spans which countries?', '["West Africa", "East Africa", "Southern Africa", "North Africa"]'::jsonb, 0),
+(9, 'What is the largest country by area in Africa?', '["Nigeria", "Algeria", "DR Congo", "Sudan"]'::jsonb, 1),
+(9, 'Victoria Falls is between which countries?', '["Zambia and Zimbabwe", "South Africa and Botswana", "Tanzania and Kenya", "Egypt and Sudan"]'::jsonb, 0);
+
+-- Set 10: African History - Ancient Civilizations
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(10, 'What is the ancient name for Egypt?', '["Kemet", "Nubia", "Axum", "Carthage"]'::jsonb, 0),
+(10, 'The Kingdom of Kush was located in?', '["Sudan", "Ethiopia", "Ghana", "Mali"]'::jsonb, 0),
+(10, 'Who was the famous queen of Egypt?', '["Nefertiti", "Hatshepsut", "Cleopatra", "All"]'::jsonb, 3),
+(10, 'Great Zimbabwe is known for what?', '["Stone ruins", "Pyramids", "Gold mines", "Slave trade"]'::jsonb, 0),
+(10, 'The Axum Empire was in modern-day?', '["Ethiopia", "Somalia", "Kenya", "Tanzania"]'::jsonb, 0);
+
+-- Set 11: African Sports - Football and Olympics
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(11, 'Who is the Egyptian "King of Football"?', '["Mohamed Salah", "Samuel Eto''o", "Didier Drogba", "George Weah"]'::jsonb, 0),
+(11, 'Which African won Olympic 100m gold?', '["Usain Bolt", "Wilma Rudolph", "Jesse Owens", "None African"]'::jsonb, 3),
+(11, 'CAF Champions League is for which sport?', '["Football", "Basketball", "Athletics", "Rugby"]'::jsonb, 0),
+(11, 'Who is the Kenyan marathon legend?', '["Eliud Kipchoge", "Kenenisa Bekele", "Paul Tergat", "All"]'::jsonb, 3),
+(11, 'African Cup of Nations started in?', '["1957", "1960", "1968", "1974"]'::jsonb, 0);
+
+-- Set 12: African Movies - Nollywood and Beyond
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(12, 'What is the capital of Nollywood?', '["Lagos", "Accra", "Johannesburg", "Nairobi"]'::jsonb, 0),
+(12, 'Who directed "The Wedding Party"?', '["Kunle Afolayan", "Funke Akindele", "Genevieve Nnaji", "Kemi Adetiba"]'::jsonb, 3),
+(12, ' "Sarafina!" is about which struggle?', '["Apartheid", "Independence", "Slavery", "Colonialism"]'::jsonb, 0),
+(12, 'Which South African film is about miners?', '["Mine Boys", "Tsotsi", "District 9", "Chopper"]'::jsonb, 0),
+(12, ' "Lion King" inspired by which African?', '["Hamlet", "Egyptian myth", "Hausa folklore", "Zulu stories"]'::jsonb, 3);
+
+-- Set 13: African Riddles - Folklore Edition
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(13, 'In Ashanti tales, Anansi wants what?', '["Stories", "Honey", "Clothes", "Food"]'::jsonb, 0),
+(13, 'What Swahili riddle: "I speak but have no mouth" (echo in folklore)?', '["Wind", "River", "Echo", "Drum"]'::jsonb, 2),
+(13, 'In Maasai lore, what is Enkai?', '["God", "Lion", "River", "Tree"]'::jsonb, 0),
+(13, 'African riddle: "Black bird with white eggs" (cow)?', '["Chicken", "Cow", "Ostrich", "Guinea fowl"]'::jsonb, 1),
+(13, 'What is the moral of many Anansi stories?', '["Cleverness wins", "Strength wins", "Honesty wins", "Luck wins"]'::jsonb, 0);
+
+-- Set 14: African Math - History and Concepts
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(14, 'Who is the "father of African mathematics"?', '["Hypatia", "Diophantus", "Africanus Horton", "None"]'::jsonb, 2),
+(14, 'The fractals in African architecture are from?', '["Egypt", "Mali", "Ethiopia", "All"]'::jsonb, 3),
+(14, 'What is the sum of first 10 natural numbers in ancient African method?', '["55", "50", "45", "60"]'::jsonb, 0),
+(14, 'Lebombo bone from Swaziland shows?', '["Lunar calendar", "Counting", "Geometry", "Astronomy"]'::jsonb, 0),
+(14, 'African binary system in?', '["Yoruba Ifa divination", "Egyptian hieroglyphs", "Nubian numerals", "All"]'::jsonb, 0);
+
+-- Set 15: African Geography - Mountains and Deserts
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(15, 'Highest mountain in Africa?', '["Kilimanjaro", "Ras Dashen", "Mount Kenya", "Drakensberg"]'::jsonb, 0),
+(15, 'Kalahari Desert is in?', '["Southern Africa", "North Africa", "East Africa", "West Africa"]'::jsonb, 0),
+(15, 'Okavango Delta is in which country?', '["Botswana", "Namibia", "Zambia", "Angola"]'::jsonb, 0),
+(15, 'Atlas Mountains span?', '["Morocco to Tunisia", "Algeria only", "Libya", "Egypt"]'::jsonb, 0),
+(15, 'Serengeti is famous for?', '["Migration", "Pyramids", "Gold", "Diamonds"]'::jsonb, 0);
+
+-- Set 16: African History - Empires and Kingdoms
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(16, 'Mansa Musa was emperor of?', '["Mali Empire", "Songhai", "Ghana", "Kanem-Bornu"]'::jsonb, 0),
+(16, 'The Zulu Kingdom was led by?', '["Shaka Zulu", "Cetshwayo", "Dingane", "Mpande"]'::jsonb, 0),
+(16, 'Benin Kingdom known for?', '["Bronze art", "Pyramids", "Mummies", "Temples"]'::jsonb, 0),
+(16, 'Swahili city-states traded with?', '["Arabs and Indians", "Europeans", "Americans", "Asians only"]'::jsonb, 0),
+(16, 'Great Mosque of Djenne is in?', '["Mali", "Niger", "Burkina Faso", "Senegal"]'::jsonb, 0);
+
+-- Set 17: African Literature - Authors and Works
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(17, 'Who wrote "Weep Not, Child"?', '["Ngugi wa Thiong''o", "Chinua Achebe", "Ama Ata Aidoo", "Niyi Osundare"]'::jsonb, 0),
+(17, ' "The Beautyful Ones Are Not Yet Born" by?', '["Ayi Kwei Armah", "Kofi Awoonor", "J.P. Clark", "Gabriel Okara"]'::jsonb, 0),
+(17, 'South African "Cry, the Beloved Country" author?', '["Alan Paton", "Nadine Gordimer", "Andre Brink", "J.M. Coetzee"]'::jsonb, 0),
+(17, ' "So Long a Letter" is from?', '["Senegal", "Ivory Coast", "Mali", "Guinea"]'::jsonb, 0),
+(17, 'Who is the "Sage of Kisumu" in literature?', '["Ngugi wa Thiong''o", "Okot p''Bitek", "Taban lo Liyong", "Richard Wright"]'::jsonb, 0);
+
+-- Set 18: African Sports - Athletics and More
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(18, 'Who is the Ethiopian "Flying Ethiopian"?', '["Kenenisa Bekele", "Haile Gebrselassie", "Derartu Tulu", "Tirunesh Dibaba"]'::jsonb, 1),
+(18, 'African wrestler from Senegal?', '["Lamine Diack", "Fatou Bintou Fall", "Ismael Lô", "None"]'::jsonb, 1),
+(18, 'Which country hosts the East African Safari Rally?', '["Kenya", "Tanzania", "Uganda", "Rwanda"]'::jsonb, 0),
+(18, 'Boxing legend from Ghana?', '["Azumah Nelson", "Joshua Clottey", "Isaac Dogboe", "All"]'::jsonb, 3),
+(18, 'African basketball star in NBA?', '["Hakeem Olajuwon", "Manute Bol", "Dikembe Mutombo", "All"]'::jsonb, 3);
+
+-- Set 19: African Movies - Festivals and Directors
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(19, 'FESPACO film festival is in?', '["Burkina Faso", "Senegal", "Mali", "Niger"]'::jsonb, 0),
+(19, 'Director of "Hyenas" from Senegal?', '["Djibril Diop Mambéty", "Ousmane Sembène", "Mahama Johnson Traoré", "Sami Bouajila"]'::jsonb, 1),
+(19, ' "Kirikou and the Sorceress" is animated from?', '["West Africa", "East Africa", "South Africa", "North Africa"]'::jsonb, 0),
+(19, 'South African "Tsotsi" won Oscar in?', '["2005", "2000", "2010", "1995"]'::jsonb, 0),
+(19, 'Who is the "father of African cinema"?', '["Ousmane Sembène", "Souleymane Cissé", "Idrissa Ouédraogo", "Gaston Kaboré"]'::jsonb, 0);
+
+-- Set 20: African Riddles - Nature and Wisdom
+INSERT INTO public.questions (set_id, question, options, correct_index) VALUES
+(20, 'African riddle: "I have no legs but I can run" (river)?', '["River", "Wind", "Cloud", "Fire"]'::jsonb, 0),
+(20, 'In Dogon lore, what is Amma?', '["Creator god", "Trickster", "Hero", "Ancestor"]'::jsonb, 0),
+(20, 'What Hausa riddle: "One eye, one leg, carries a load" (needle)?', '["Needle", "Stick", "Arrow", "Spear"]'::jsonb, 0),
+(20, 'African proverb origin: "It takes a village to raise a child"?', '["Igbo", "Swahili", "Zulu", "Yoruba"]'::jsonb, 0),
+(20, 'What is the "talking drum" in Yoruba culture?', '["Communication tool", "Music instrument only", "Weapon", "Food"]'::jsonb, 0);
 
 -- Enable RLS for public read access
 ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read access" ON public.questions;
 CREATE POLICY "Public read access" ON public.questions FOR SELECT USING (true);
