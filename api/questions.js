@@ -47,9 +47,22 @@ export default async function handler(req, res) {
       } else if (q.options && Array.isArray(q.options)) {
         // Already an array from Supabase JSONB
         options = q.options;
+      } else if (!q.options) {
+        console.warn(`Missing options for question: ${q.question.substring(0, 50)}...`);
+        options = ['Option A', 'Option B', 'Option C', 'Option D']; // Default fallback
       }
-      // Log for debugging (remove after fix)
-      console.log(`Question "${q.question.substring(0, 50)}...": options type=${typeof q.options}, value=${JSON.stringify(q.options?.substring(0, 20) || q.options)}`);
+      // Safe logging for debugging (remove after verification)
+      let logValue = 'null';
+      if (q.options) {
+        if (typeof q.options === 'string') {
+          logValue = q.options.substring(0, 20);
+        } else if (Array.isArray(q.options)) {
+          logValue = `[${q.options.slice(0, 2).join(', ')}...]`;
+        } else {
+          logValue = JSON.stringify(q.options);
+        }
+      }
+      console.log(`Question "${q.question.substring(0, 50)}...": options type=${typeof q.options}, value="${logValue}"`);
       sets[q.set_id].push({
         question: q.question,
         options: options,
