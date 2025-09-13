@@ -34,17 +34,22 @@ export default async function handler(req, res) {
       if (!sets[q.set_id]) {
         sets[q.set_id] = [];
       }
-      let options;
-      try {
-        options = JSON.parse(q.options);
-      } catch (e) {
-        if (e instanceof SyntaxError) {
-          // Fallback: treat as comma-separated string
-          options = q.options.split(',').map(opt => opt.trim());
-        } else {
-          throw e;
+      let options = [];
+      if (q.options && typeof q.options === 'string') {
+        try {
+          options = JSON.parse(q.options);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            // Fallback: treat as comma-separated string
+            options = q.options.split(',').map(opt => opt.trim()).filter(opt => opt);
+          }
         }
+      } else if (q.options && Array.isArray(q.options)) {
+        // Already an array from Supabase JSONB
+        options = q.options;
       }
+      // Log for debugging (remove after fix)
+      console.log(`Question "${q.question.substring(0, 50)}...": options type=${typeof q.options}, value=${JSON.stringify(q.options?.substring(0, 20) || q.options)}`);
       sets[q.set_id].push({
         question: q.question,
         options: options,
