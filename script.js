@@ -582,9 +582,29 @@ window.toggleDetails = function(btn) {
 };
 
 // Logo click to return to home page
-document.getElementById('logo-image').addEventListener('click', function(event) {
-    console.log('Logo clicked, returning to home page');
-    backToMenu();
-});
+const logoImage = document.getElementById('logo-image');
+const logoDiv = document.getElementById('logo');
+
+if (logoImage) {
+    console.log('Logo image found, attaching listener');
+    logoImage.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Logo image clicked, returning to home page');
+        backToMenu();
+    });
+} else {
+    console.log('Logo image not found');
+}
+
+if (logoDiv) {
+    console.log('Logo div found, attaching listener');
+    logoDiv.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Logo div clicked, returning to home page');
+        backToMenu();
+    });
+} else {
+    console.log('Logo div not found');
+}
 
 // Initialize the app
